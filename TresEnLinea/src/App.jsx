@@ -7,8 +7,18 @@ import { checkWinner, checkEndGame } from './components/logic/board'
 import { WinnerModal } from './components/WinnerModal.jsx'
 
 function App() {
-  const [board, setBoard] = useState(Array(9).fill(null))
-  const [turn, setTurn] = useState(turnos.x)
+  const [board, setBoard] = useState(() => {
+    const boardFromStorage = window.localStorage.getItem('board')
+    if (boardFromStorage) return JSON.parse(boardFromStorage)
+    return Array(9).fill(null)
+
+  })
+
+  const [turn, setTurn] = useState(() => {
+    const turnFormStorage = window.localStorage.getItem('Turn')
+    return turnFormStorage ?? turnos.x
+  })
+
   const [winner, setWinner] = useState(null)
 
 
@@ -18,6 +28,8 @@ function App() {
     setBoard(Array(9).fill(null))
     setTurn(turnos.x)
     setWinner(null)
+    window.localStorage.removeItem('board')
+    window.localStorage.removeItem('Turn')
   }
 
   const updateBoard = (index) => {
@@ -27,6 +39,9 @@ function App() {
     setBoard(newBoard)
 
     const newTurn = turn === turnos.x ? turnos.o : turnos.x
+    window.localStorage.setItem('board', JSON.stringify(newBoard))
+    window.localStorage.setItem('Turn', newTurn)
+
     setTurn(newTurn)
     const newWinner = checkWinner(newBoard)
     if (newWinner) {
@@ -40,7 +55,7 @@ function App() {
 
   return (
     <>
-      <main className="board">
+      <main className='board'>
         <h1>Tres en linea</h1>
         <button onClick={resetGame}>Emepzar de nuevo</button>
         <section className='game'>

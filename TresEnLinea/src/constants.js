@@ -1,6 +1,6 @@
  export const turnos = {
-  x:' X ',
-  o:' O '
+  x:'X',
+  o:'O'
 }
 
 
